@@ -22,6 +22,9 @@ def clear_terminal():
 
 
 def print_board(board):
+    """
+    Print board
+    """
     for row in board:
         for col in row:
             print(f"{col} ", end="")
@@ -83,12 +86,14 @@ print(pyfiglet.figlet_format("TIC TAC TOE" ))
 # Create board: EMPTY_SQUARE_SYMBOL * BOARD_ROWS
 board = [[EMPTY_SQUARE_SYMBOL] * BOARD_ROWS for i in range(BOARD_COLS)]
 
+# player figure whoes allowed to select
 allowed_players = ["0", "X"]
 try:
     while True:
             # Split to 2 loops cuz we econom memory! Now we select first player figure and forget that to all time.
             # if these 2 loops combining in one loop then we need create a check, if user have an figure. 1 loop 1 unnecessary choice
             player = input("Select player one figure: 0 or X: ").upper()
+            # check if figure is in allwed figure list
             if player not in allowed_players:
                 print("You can use only [0 or X]")
                 continue
@@ -107,15 +112,21 @@ try:
             print(f"\nLetters not availabled\nTry again!")
             time.sleep(1)
             continue
+        
+        # input() returns string 
+        # Convert data to int, cuz we can't at this situation do it like | int(input("..."))
         row = int(row)
         col = int(col)
         
         try:
+            # check if square is free
             if available_square(row, col):
                 if player == "0":
+                    # if player = 0 mark square and switch players
                     mark_square(row, col, player)
                     player = "X"
                 elif player == "X":
+                    # if player = X mark square and switch players
                     mark_square(row, col, player)
                     player = "0"
             else:
@@ -123,6 +134,7 @@ try:
                 time.sleep(1)
                 continue
         except IndexError:
+            # If player selected position who not exist.
             print(f"\nPosition {row, col} not exist\nTry again!")
             time.sleep(1)
             continue
