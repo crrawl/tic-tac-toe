@@ -10,6 +10,8 @@ BOARD_ROWS = 3
 BOARD_COLS = 3
 
 EMPTY_SQUARE_SYMBOL = "-"
+GAME_OVER = False
+
 
 # FUNCTIONS
 def clear_terminal():
@@ -99,7 +101,7 @@ try:
                 continue
             break
 
-    while True:
+    while not GAME_OVER:
         clear_terminal()
         
         print()
@@ -124,10 +126,20 @@ try:
                 if player == "0":
                     # if player = 0 mark square and switch players
                     mark_square(row, col, player)
+
+                    if check_win(player):
+                        print(f"CONGRATULATIONS {player} YOU WIN")
+                        GAME_OVER = True
+
                     player = "X"
                 elif player == "X":
                     # if player = X mark square and switch players
                     mark_square(row, col, player)
+                    
+                    if check_win(player):
+                        print(f"CONGRATULATIONS {player} YOU WIN")
+                        GAME_OVER = True
+                    
                     player = "0"
             else:
                 print("This square already taken.")
