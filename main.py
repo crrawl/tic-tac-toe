@@ -4,12 +4,12 @@ print("""
 # @instagram https://www.instagram.com/raibisu.kuramu
 # @site https://yuukuramu.xyz
 """)
+
 # CONST
 BOARD_ROWS = 3
 BOARD_COLS = 3
 
 EMPTY_SQUARE_SYMBOL = "-"
-
 
 # FUNCTIONS
 def clear_terminal():
@@ -42,13 +42,31 @@ def available_square(row, col):
     return board[row][col] == EMPTY_SQUARE_SYMBOL
 
 def is_board_full():
+    """Check is board full"""
     for row in range(BOARD_ROWS):
         for col in range(BOARD_COLS):
             if board[row][col] == EMPTY_SQUARE_SYMBOL:
                 return False
     return True
 
-# libraries
+def check_win(player):
+    "Check is somebody win."
+    # vertical WIN
+    for col in range(BOARD_COLS):
+        if board[0][col] == player and board[1][col] == player and board[2][col] == player:
+            return True
+    # Horizontal WIN
+    for row in range(BOARD_ROWS):
+        if board[row][0] == player and board[row][1] == player and board[row][2] == player:
+            return True
+    # asc diognal WIN
+    if board[2][0] == player and board[1][1] == player and board[0][2] == player:
+        return True
+    # desc diognal WIN
+    if board[0][0] == player and board[1][1] == player and board[2][2] == player:
+        return True
+
+# modules
 import os
 import time
 
@@ -65,4 +83,48 @@ print(pyfiglet.figlet_format("TIC TAC TOE" ))
 # Create board: EMPTY_SQUARE_SYMBOL * BOARD_ROWS
 board = [[EMPTY_SQUARE_SYMBOL] * BOARD_ROWS for i in range(BOARD_COLS)]
 
-print_board(board)
+allowed_players = ["0", "X"]
+try:
+    while True:
+            # Split to 2 loops cuz we econom memory! Now we select first player figure and forget that to all time.
+            # if these 2 loops combining in one loop then we need create a check, if user have an figure. 1 loop 1 unnecessary choice
+            player = input("Select player one figure: 0 or X: ").upper()
+            if player not in allowed_players:
+                print("You can use only [0 or X]")
+                continue
+            break
+
+    while True:
+        clear_terminal()
+        
+        print()
+        print_board(board)
+        print()
+
+        try:
+            row, col = input("Select square position. example - 0 0: ").split()
+        except ValueError:
+            print(f"\nLetters not availabled\nTry again!")
+            time.sleep(1)
+            continue
+        row = int(row)
+        col = int(col)
+        
+        try:
+            if available_square(row, col):
+                if player == "0":
+                    mark_square(row, col, player)
+                    player = "X"
+                elif player == "X":
+                    mark_square(row, col, player)
+                    player = "0"
+            else:
+                print("This square already taken.")
+                time.sleep(1)
+                continue
+        except IndexError:
+            print(f"\nPosition {row, col} not exist\nTry again!")
+            time.sleep(1)
+            continue
+except KeyboardInterrupt:
+    print("\nGame has been closed.")
